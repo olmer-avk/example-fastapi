@@ -11,6 +11,7 @@ from .routers import post, user, auth, vote
 
 app = FastAPI()
 
+
 origins = ['https://www.google.com']
 app.add_middleware(
     CORSMiddleware,
