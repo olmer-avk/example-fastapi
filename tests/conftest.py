@@ -61,6 +61,16 @@ def test_user(client):
 
 
 @pytest.fixture
+def test_user2(client):
+    user_data = {'email': 'hello123@mail.ru', 'password': '123'}
+    res = client.post('/users', json=user_data)
+    assert res.status_code == 201
+    new_user = res.json()
+    new_user['password'] = user_data['password']
+    return new_user
+
+
+@pytest.fixture
 def token(test_user):
     return create_acccess_token(data={"user_id": test_user['id']})
 
@@ -73,11 +83,12 @@ def authorized_client(client, token):
 
 
 @pytest.fixture
-def test_posts(test_user, session):
+def test_posts(test_user, test_user2, session):
     posts_data = [
         {"title": "first title", "content": "first content", "owner_id": test_user['id']},
         {"title": "second title", "content": "second content", "owner_id": test_user['id']},
-        {"title": "third title", "content": "third content", "owner_id": test_user['id']}
+        {"title": "third title", "content": "third content", "owner_id": test_user['id']},
+        {"title": "sdfdsf title", "content": "dfdf content", "owner_id": test_user2['id']}
     ]
 
     post_map = map(lambda d: models.Post(**d), posts_data)
